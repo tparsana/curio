@@ -20,10 +20,10 @@ interface ConfirmationModalProps {
 export function ConfirmationModal({ isOpen, onClose, onConfirm, title, description }: ConfirmationModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] bg-[#1f1f1f] border-[#272727]">
+      <DialogContent className="sm:max-w-[425px] bg-[#121214] border-[#2A2A2D]">
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription className="text-gray-400">{description}</DialogDescription>
+          <DialogTitle className="text-[#EDE9E4]">{title}</DialogTitle>
+          <DialogDescription className="text-[#EDE9E4]/65">{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex gap-2 sm:justify-end">
           <Button variant="outline" onClick={onClose} className="bg-transparent">

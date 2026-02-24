@@ -49,12 +49,34 @@
   }
 }
 
+@layer utilities {
+  .font-nord {
+    font-family:
+      var(--font-nord),
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      "Segoe UI",
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      "Noto Sans",
+      sans-serif;
+  }
+
+  .marketing-container {
+    margin-inline: auto;
+    max-width: 1180px;
+    padding-inline: 1rem;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
   }
 }
 

@@ -7,7 +7,7 @@ import { VideoFeed } from "@/components/video-feed"
 export default function HomeClient() {
   return (
     <VideoProvider>
-      <div className="flex min-h-screen bg-black text-white">
+      <div className="flex min-h-screen bg-[#0B0B0C] text-[#EDE9E4]">
         <Sidebar />
         <main className="flex-1 overflow-auto">
           <VideoFeed />

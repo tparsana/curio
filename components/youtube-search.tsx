@@ -171,14 +171,14 @@ export function YouTubeSearch() {
             placeholder="Search YouTube videos..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="bg-[#121212] border-[#272727] h-10 pl-10"
+            className="bg-[#121214] border-[#2A2A2D] h-10 pl-10"
           />
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[#EDE9E4]/55" />
         </div>
         <Button
           type="submit"
           disabled={isSearching || !query.trim()}
-          className="bg-red-600 hover:bg-red-700 text-white w-full sm:w-auto"
+          className="bg-[#2A2A2D] hover:bg-[#38383D] text-[#EDE9E4] w-full sm:w-auto"
         >
           {isSearching ? <Loader2 className="h-4 w-4 animate-spin" /> : "Search"}
         </Button>
@@ -193,8 +193,8 @@ export function YouTubeSearch() {
       )}
 
       {error && (
-        <Alert className="mb-4 bg-red-900/20 border-red-800">
-          <AlertCircle className="h-4 w-4 text-red-600" />
+        <Alert className="mb-4 bg-red-900/20 border-red-800 text-[#EDE9E4]">
+          <AlertCircle className="h-4 w-4 text-red-500" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
@@ -202,14 +202,14 @@ export function YouTubeSearch() {
 
       {isSearching ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-red-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#EDE9E4]/70" />
         </div>
       ) : results.length > 0 ? (
         <div>
           <h2 className="text-xl font-bold mb-4">Search Results</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {results.map((result) => (
-              <div key={result.id.videoId} className="bg-[#181818] rounded-lg overflow-hidden">
+              <div key={result.id.videoId} className="bg-[#121214] border border-[#2A2A2D] rounded-xl overflow-hidden">
                 <div className="aspect-video bg-cover bg-center relative">
                   <img
                     src={result.snippet.thumbnails.medium.url || "/placeholder.svg"}
@@ -220,7 +220,7 @@ export function YouTubeSearch() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="bg-red-600 hover:bg-red-700 text-white border-none"
+                      className="bg-[#2A2A2D] hover:bg-[#38383D] text-[#EDE9E4] border-none"
                       onClick={() => handleSaveVideo(result)}
                     >
                       <Plus className="h-4 w-4 mr-1" />
@@ -249,9 +249,14 @@ export function YouTubeSearch() {
           {nextPageToken && !usingMockData && (
             <div ref={loadMoreRef} className="flex justify-center py-6">
               {isLoadingMore ? (
-                <Loader2 className="h-6 w-6 animate-spin text-red-600" />
+                <Loader2 className="h-6 w-6 animate-spin text-[#EDE9E4]/70" />
               ) : (
-                <Button variant="ghost" size="sm" onClick={loadMoreResults} className="text-gray-400 hover:text-white">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={loadMoreResults}
+                  className="text-[#EDE9E4]/60 hover:text-[#EDE9E4]"
+                >
                   Load more
                 </Button>
               )}
@@ -259,7 +264,7 @@ export function YouTubeSearch() {
           )}
         </div>
       ) : query.trim() && !isSearching ? (
-        <div className="text-center py-12 text-gray-400">
+        <div className="text-center py-12 text-[#EDE9E4]/65">
           <p>No videos found. Try a different search term.</p>
         </div>
       ) : null}

@@ -20,7 +20,7 @@ export function VideoPlayer({ video }: VideoPlayerProps) {
         </Button>
       </div>
 
-      <div className="rounded-xl overflow-hidden shadow-lg bg-[#0f0f0f]">
+      <div className="rounded-xl overflow-hidden shadow-lg bg-[#121214] border border-[#2A2A2D]">
         {/* Enhanced video player container */}
         <div className="aspect-video w-full bg-black">
           <iframe

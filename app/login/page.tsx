@@ -5,12 +5,12 @@ import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { BookmarkPlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { useAuth } from "@/components/auth-provider"
 import { useToast } from "@/hooks/use-toast"
+import { CurioLogo } from "@/components/branding/CurioLogo"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -28,9 +28,9 @@ export default function LoginPage() {
       await login(email, password)
       toast({
         title: "Login successful",
-        description: "Welcome back to LaterTube!",
+        description: "Welcome back to Curio.",
       })
-      router.push("/")
+      router.push("/app")
     } catch (error: any) {
       toast({
         title: "Login failed",
@@ -43,17 +43,18 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black p-4">
-      <Card className="w-full max-w-md bg-[#121212] border-[#272727]">
+    <div className="min-h-screen flex items-center justify-center bg-[#0B0B0C] p-4">
+      <Card className="w-full max-w-md bg-[#121214] border-[#2A2A2D] text-[#EDE9E4]">
         <CardHeader className="space-y-1">
           <div className="flex justify-center mb-4">
-            <Link href="/" className="flex items-center gap-2 text-2xl font-bold">
-              <BookmarkPlus className="h-8 w-8 text-red-500" />
-              <span>LaterTube</span>
+            <Link href="/" className="flex items-center text-2xl font-semibold">
+              <CurioLogo variant="wordmark" className="text-[26px] text-[#EDE9E4]" />
             </Link>
           </div>
           <CardTitle className="text-2xl text-center">Login</CardTitle>
-          <CardDescription className="text-center">Enter your credentials to access your account</CardDescription>
+          <CardDescription className="text-center text-[#EDE9E4]/65">
+            Enter your credentials to access your Curio library
+          </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
@@ -65,7 +66,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-[#1e1e1e] border-[#333333]"
+                className="bg-[#0F0F10] border-[#2A2A2D]"
               />
             </div>
             <div className="space-y-2">
@@ -76,21 +77,21 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="bg-[#1e1e1e] border-[#333333]"
+                className="bg-[#0F0F10] border-[#2A2A2D]"
               />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button
               type="submit"
-              className="w-full bg-red-600 hover:bg-red-700 text-white"
+              className="w-full bg-[#2A2A2D] hover:bg-[#38383D] text-[#EDE9E4]"
               disabled={isLoading || !email || !password}
             >
               {isLoading ? "Logging in..." : "Login"}
             </Button>
             <div className="text-center text-sm">
               Don&apos;t have an account?{" "}
-              <Link href="/signup" className="text-blue-400 hover:underline">
+              <Link href="/signup" className="text-[#EDE9E4]/80 hover:text-[#EDE9E4] hover:underline">
                 Sign up
               </Link>
             </div>

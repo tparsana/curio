@@ -75,18 +75,18 @@ export function VideoCard({ video }: VideoCardProps) {
   const getPriorityColor = (priority: PriorityLevel) => {
     switch (priority) {
       case "high":
-        return "bg-red-500"
+        return "bg-amber-500"
       case "medium":
-        return "bg-yellow-500"
+        return "bg-zinc-500"
       case "low":
-        return "bg-green-500"
+        return "bg-emerald-500"
       default:
         return "bg-gray-500"
     }
   }
 
   return (
-    <div className="bg-[#181818] rounded-lg overflow-hidden group">
+    <div className="bg-[#121214] border border-[#2A2A2D] rounded-xl overflow-hidden group">
       <div className="relative">
         {/* Thumbnail */}
         <div
@@ -99,7 +99,7 @@ export function VideoCard({ video }: VideoCardProps) {
             <Button
               variant="outline"
               size="icon"
-              className="rounded-full bg-black/50 hover:bg-blue-600 hover:text-white transition-colors"
+              className="rounded-full bg-black/50 hover:bg-[#2A2A2D] hover:text-[#EDE9E4] transition-colors"
               onClick={(e) => handleStatusUpdate("up_next", e)}
             >
               <Eye className="h-5 w-5" />
@@ -107,7 +107,7 @@ export function VideoCard({ video }: VideoCardProps) {
             <Button
               variant="outline"
               size="icon"
-              className="rounded-full bg-black/50 hover:bg-green-600 hover:text-white transition-colors"
+              className="rounded-full bg-black/50 hover:bg-emerald-600 hover:text-white transition-colors"
               onClick={(e) => handleStatusUpdate("watched", e)}
             >
               <Check className="h-5 w-5" />
@@ -125,7 +125,7 @@ export function VideoCard({ video }: VideoCardProps) {
           {/* Status and priority indicators */}
           <div className="absolute bottom-2 right-2 flex gap-1">
             {video.status === "up_next" && (
-              <span className="bg-blue-600 text-white px-2 py-1 rounded text-xs">Up Next</span>
+              <span className="bg-[#2A2A2D] text-[#EDE9E4] px-2 py-1 rounded text-xs">Up Next</span>
             )}
             {video.status === "watched" && (
               <span className="bg-green-600 text-white px-2 py-1 rounded text-xs">Watched</span>
@@ -166,17 +166,17 @@ export function VideoCard({ video }: VideoCardProps) {
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent onClick={(e) => e.stopPropagation()}>
                     <DropdownMenuItem onClick={(e) => handlePriorityUpdate("high", e)}>
-                      <span className="w-2 h-2 rounded-full bg-red-500 mr-2"></span>
+                      <span className="w-2 h-2 rounded-full bg-amber-500 mr-2"></span>
                       High
                       {video.priority === "high" && <Check className="h-4 w-4 ml-2" />}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={(e) => handlePriorityUpdate("medium", e)}>
-                      <span className="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>
+                      <span className="w-2 h-2 rounded-full bg-zinc-500 mr-2"></span>
                       Medium
                       {video.priority === "medium" && <Check className="h-4 w-4 ml-2" />}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={(e) => handlePriorityUpdate("low", e)}>
-                      <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span>
                       Low
                       {video.priority === "low" && <Check className="h-4 w-4 ml-2" />}
                     </DropdownMenuItem>
@@ -225,7 +225,7 @@ export function VideoCard({ video }: VideoCardProps) {
         {videoTags.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-2">
             {videoTags.map((tag) => (
-              <span key={tag.id} className="text-xs bg-[#272727] text-gray-300 px-2 py-0.5 rounded">
+              <span key={tag.id} className="text-xs bg-[#2A2A2D] text-[#EDE9E4]/75 px-2 py-0.5 rounded">
                 {tag.name}
               </span>
             ))}

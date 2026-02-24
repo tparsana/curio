@@ -1,7 +1,7 @@
 import { AuthGuard } from "@/components/auth-guard"
-import HomeClient from "./home-client"
+import HomeClient from "@/app/home-client"
 
-export default function Home() {
+export default function AppPage() {
   return (
     <AuthGuard>
       <HomeClient />

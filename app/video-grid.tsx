@@ -73,15 +73,17 @@ export default function VideoGrid() {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#2A2A2D]"></div>
       </div>
     )
   }
 
   if (!list.length) {
+    const isHomeView = !status && !tagId && !priority
     return (
-      <div className="text-center py-12 text-gray-400">
-        <p>No videos found in this section.</p>
+      <div className="text-center py-12 text-[#EDE9E4]/65">
+        <p>{isHomeView ? "Your Curio is empty." : "No videos found in this section."}</p>
+        {isHomeView && <p className="mt-1 text-sm">Add something worth your time.</p>}
       </div>
     )
   }

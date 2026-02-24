@@ -41,7 +41,7 @@ export function VideoInput() {
   }
 
   return (
-    <div className="sticky top-0 z-10 bg-black py-2 sm:py-4">
+    <div className="sticky top-0 z-10 bg-[#0B0B0C] py-2 sm:py-4">
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
         <div className="relative flex-1">
           <Input
@@ -49,14 +49,14 @@ export function VideoInput() {
             placeholder="Paste YouTube URL here"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            className="bg-[#121212] border-[#272727] h-10 pl-10"
+            className="bg-[#121214] border-[#2A2A2D] h-10 pl-10"
           />
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-[#EDE9E4]/55" />
         </div>
         <Button
           type="submit"
           disabled={isLoading || !url.trim()}
-          className="bg-red-600 hover:bg-red-700 text-white w-full sm:w-auto"
+          className="bg-[#2A2A2D] hover:bg-[#38383D] text-[#EDE9E4] w-full sm:w-auto"
         >
           {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Add Video"}
         </Button>
