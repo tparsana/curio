@@ -12,7 +12,7 @@ export function EditorialHeading({ as: Comp = "h2", className, children }: TypeP
   return (
     <Comp
       className={cn(
-        "font-nord text-balance text-2xl font-medium uppercase tracking-[0.2em] text-[color:var(--marketing-fg)] sm:text-3xl",
+        "font-nord text-balance text-[26px] font-normal uppercase tracking-[0.18em] text-[color:var(--marketing-fg)] sm:text-[34px]",
         className,
       )}
     >
@@ -25,7 +25,7 @@ export function EditorialLabel({ as: Comp = "p", className, children }: TypeProp
   return (
     <Comp
       className={cn(
-        "font-nord text-xs uppercase tracking-[0.24em] text-[color:var(--marketing-muted)]",
+        "font-nord text-[11px] uppercase tracking-[0.22em] text-[color:var(--marketing-muted)]",
         className,
       )}
     >

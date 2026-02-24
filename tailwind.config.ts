@@ -21,7 +21,7 @@ const config = {
     extend: {
       fontFamily: {
         sans: [
-          "var(--font-nord)",
+          "var(--font-manrope, var(--font-nord))",
           "ui-sans-serif",
           "system-ui",
           "-apple-system",
@@ -43,6 +43,15 @@ const config = {
           "Arial",
           "Noto Sans",
           "sans-serif",
+        ],
+        accent: [
+          "var(--font-accent)",
+          "ui-serif",
+          "Georgia",
+          "Cambria",
+          "\"Times New Roman\"",
+          "Times",
+          "serif",
         ],
       },
       colors: {

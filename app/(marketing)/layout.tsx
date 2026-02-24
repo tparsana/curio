@@ -1,9 +1,23 @@
 import type { Metadata } from "next"
 import type React from "react"
+import { Fraunces, Manrope } from "next/font/google"
 
 import { nord } from "@/app/fonts"
 
 const canonicalHost = "https://curio.tanishparsana.com"
+const manrope = Manrope({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-manrope",
+  weight: ["400", "500", "600"],
+})
+const accent = Fraunces({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-accent",
+  weight: ["400", "500"],
+  style: ["italic"],
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL(canonicalHost),
@@ -39,7 +53,7 @@ export default function MarketingLayout({
 }) {
   return (
     <div
-      className={`${nord.variable} marketing-shell relative min-h-screen bg-[#0B0B0C] text-[color:var(--marketing-fg)]`}
+      className={`${manrope.variable} ${accent.variable} ${nord.variable} marketing-shell relative min-h-screen bg-[#0B0B0C] font-sans text-[color:var(--marketing-fg)]`}
       style={
         {
           "--marketing-bg": "#0B0B0C",
@@ -47,6 +61,10 @@ export default function MarketingLayout({
           "--marketing-border": "#2A2A2D",
           "--marketing-fg": "#EDE9E4",
           "--marketing-muted": "rgba(237,233,228,0.65)",
+          "--marketing-sage": "191 216 194",
+          "--marketing-sky": "191 215 234",
+          "--marketing-lilac": "215 198 242",
+          "--marketing-sand": "230 215 200",
         } as React.CSSProperties
       }
     >

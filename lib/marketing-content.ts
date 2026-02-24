@@ -11,12 +11,13 @@ export const marketingNavItems = [
   { label: "Why Curio", href: "#why-curio" },
   { label: "Features", href: "#features" },
   { label: "Screens", href: "#screens" },
+  { label: "Compare", href: "#compare" },
   { label: "FAQ", href: "#faq" },
 ]
 
 export const marketingUseCases = [
   "Students saving lectures for focused study sessions.",
-  "Creators bookmarking tutorials for their next project sprint.",
+  "Creators bookmarking tutorials to revisit in production cycles.",
   "Professionals curating research playlists for deep work.",
 ]
 
@@ -56,6 +57,61 @@ export const marketingFeatures: MarketingFeature[] = [
       "Curio gives you a focused environment without feed pressure or algorithmic detours.",
     icon: Compass,
   },
+]
+
+export const marketingWhyWorks = [
+  {
+    title: "Less decision fatigue",
+    description: "A clear queue reduces the mental overhead of picking what to watch next.",
+  },
+  {
+    title: "Reduced cognitive load",
+    description: "Tags, filters, and priority turn a pile of links into a structured library.",
+  },
+  {
+    title: "Intentional recall",
+    description: "Context helps you return to saved videos when your attention is available.",
+  },
+]
+
+export const marketingCompareRows = [
+  {
+    label: "Organization (tags, priority)",
+    curio: "Structured",
+    watchLater: "Basic list",
+    bookmarks: "Manual folders",
+  },
+  {
+    label: "Intentionality (no autoplay, no recommendations)",
+    curio: "Built in",
+    watchLater: "Limited",
+    bookmarks: "Depends on source",
+  },
+  {
+    label: "Context (notes, labels)",
+    curio: "Designed for context",
+    watchLater: "Minimal",
+    bookmarks: "Not native",
+  },
+  {
+    label: "Discoverability (search, filters)",
+    curio: "Focused filters",
+    watchLater: "Basic search",
+    bookmarks: "Browser search",
+  },
+  {
+    label: "Calm experience",
+    curio: "Yes",
+    watchLater: "Mixed",
+    bookmarks: "Neutral",
+  },
+]
+
+export const marketingManifesto = [
+  "Save less.",
+  "Choose better.",
+  "Return with intention.",
+  "Let curiosity be calm.",
 ]
 
 export const marketingFaqs: MarketingFaq[] = [
