@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 import { CurioLogo } from "@/components/branding/CurioLogo"
+import { ASCII_ART } from "@/components/landing/ascii-art"
 import { AsciiScrollPanel } from "@/components/landing/ascii-scroll-panel"
 
 const whatIsCurio = [
@@ -56,7 +57,13 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-[#080808] text-[#F5F5F0]">
+    <main className="relative isolate min-h-screen bg-[#080808] text-[#F5F5F0]">
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 overflow-hidden lg:hidden">
+        <pre className="absolute left-1/2 top-24 m-0 w-max -translate-x-1/2 whitespace-pre text-center font-mono text-[9px] leading-[0.56rem] text-white/[0.14] antialiased">
+          {ASCII_ART}
+        </pre>
+      </div>
+
       <div className="fixed inset-x-0 top-4 z-50 px-4 sm:top-5">
         <nav className="mx-auto flex max-w-[1240px] items-center justify-between gap-4 rounded-full bg-[linear-gradient(140deg,rgba(255,255,255,0.14),rgba(255,255,255,0.04))] px-3 py-2 backdrop-blur-xl sm:px-4">
           <Link href="/" className="flex min-w-0 items-center">
@@ -84,7 +91,7 @@ export default function LandingPage() {
         </nav>
       </div>
 
-      <div className="mx-auto max-w-[1440px] lg:grid lg:min-h-screen lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)]">
+      <div className="relative z-10 mx-auto max-w-[1440px] lg:grid lg:min-h-screen lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)]">
         <div className="bg-[#080808] px-6 pb-8 pt-28 sm:px-10 sm:pb-10 sm:pt-32 lg:col-start-1 lg:row-start-1 lg:px-16 lg:pb-6 lg:pt-36">
           <section id="top" className="flex min-h-[calc(100vh-7rem)] scroll-mt-28 items-center">
             <div className="max-w-[33rem] space-y-14">
@@ -180,7 +187,7 @@ export default function LandingPage() {
                 ))}
               </div>
 
-              <div className="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center justify-between gap-4 pt-2">
                 <p className="text-sm leading-7 text-white/48">Come back when it matters.</p>
                 <div className="flex items-center gap-4 text-sm text-white/56">
                   <Link className="transition-colors hover:text-white" href="/signup">
@@ -195,7 +202,7 @@ export default function LandingPage() {
           </section>
         </div>
 
-        <aside className="order-2 bg-[#080808] px-4 pb-8 sm:px-6 sm:pb-10 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:px-8 lg:pb-12">
+        <aside className="order-2 hidden bg-[#080808] px-4 pb-8 sm:px-6 sm:pb-10 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:block lg:px-8 lg:pb-12">
           <AsciiScrollPanel />
         </aside>
 
@@ -203,9 +210,9 @@ export default function LandingPage() {
           id="site-footer"
           className="order-3 bg-[#080808] px-6 pb-8 pt-2 text-sm text-white/40 sm:px-10 sm:pb-10 lg:col-start-1 lg:row-start-2 lg:px-16 lg:pb-12 lg:pt-0"
         >
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+          <div className="flex items-center justify-between gap-6">
             <p>c. &copy; 2026 Curio. All rights reserved.</p>
-            <p className="sm:text-right">
+            <p className="text-right">
               Created Curiously by{" "}
               <a
                 href="https://solo.to/tparsana"
