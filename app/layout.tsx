@@ -4,7 +4,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { AuthProvider } from "@/components/auth-provider"
 import { Toaster } from "@/components/ui/toaster"
-import { nord } from "./fonts"
+import { questrial } from "./fonts"
 
 export const metadata: Metadata = {
   title: "Curio - Watch with intention",
@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={nord.variable} suppressHydrationWarning>
+    <html lang="en" className={questrial.variable} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>

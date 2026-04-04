@@ -13,18 +13,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${canonicalHost}/privacy`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: `${canonicalHost}/terms`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
       url: `${canonicalHost}/login`,
       lastModified: now,
       changeFrequency: "monthly",

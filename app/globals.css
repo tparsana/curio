@@ -52,7 +52,7 @@
 @layer utilities {
   .font-nord {
     font-family:
-      var(--font-nord),
+      var(--font-questrial),
       ui-sans-serif,
       system-ui,
       -apple-system,
@@ -72,6 +72,10 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   * {
     @apply border-border;
   }
