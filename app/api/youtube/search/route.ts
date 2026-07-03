@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 
-// YouTube API key is only used on the server
-const API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY || ""
+// YouTube API key is only used on the server. Keep the public name as a fallback for existing setups.
+const API_KEY = process.env.YOUTUBE_API_KEY || process.env.NEXT_PUBLIC_YOUTUBE_API_KEY || ""
 
 // Mock data for when API is unavailable
 const MOCK_SEARCH_RESULTS = [
@@ -67,6 +67,96 @@ const MOCK_SEARCH_RESULTS = [
   },
 ]
 
+const getThumbnail = (thumbnails: any = {}) =>
+  thumbnails.maxres?.url ||
+  thumbnails.standard?.url ||
+  thumbnails.high?.url ||
+  thumbnails.medium?.url ||
+  thumbnails.default?.url ||
+  "/placeholder.svg"
+
+const extractPlaylistId = (query: string) => {
+  try {
+    const url = new URL(query)
+    const list = url.searchParams.get("list")
+    if (list) return list
+  } catch {
+    // Raw ids and partially pasted URLs are handled below.
+  }
+
+  const listMatch = query.match(/[?&]list=([^&]+)/)
+  if (listMatch?.[1]) return listMatch[1]
+
+  const rawPlaylistId = query.trim()
+  return /^(PL|UU|LL|RD|OLAK5uy_)[A-Za-z0-9_-]+$/.test(rawPlaylistId) ? rawPlaylistId : null
+}
+
+async function fetchPlaylist(playlistId: string) {
+  const playlistUrl = `https://www.googleapis.com/youtube/v3/playlists?part=snippet,contentDetails&id=${encodeURIComponent(
+    playlistId,
+  )}&key=${API_KEY}`
+
+  const playlistResponse = await fetch(playlistUrl)
+  if (!playlistResponse.ok) {
+    const errorData = await playlistResponse.json().catch(() => ({}))
+    throw new Error(errorData.error?.message || playlistResponse.statusText)
+  }
+
+  const playlistData = await playlistResponse.json()
+  const playlist = playlistData.items?.[0]
+  if (!playlist) {
+    return NextResponse.json({ error: "Playlist not found" }, { status: 404 })
+  }
+
+  const videos = []
+  let nextPageToken = ""
+
+  do {
+    const playlistItemsUrl = new URL("https://www.googleapis.com/youtube/v3/playlistItems")
+    playlistItemsUrl.searchParams.set("part", "snippet,contentDetails")
+    playlistItemsUrl.searchParams.set("playlistId", playlistId)
+    playlistItemsUrl.searchParams.set("maxResults", "50")
+    playlistItemsUrl.searchParams.set("key", API_KEY)
+    if (nextPageToken) {
+      playlistItemsUrl.searchParams.set("pageToken", nextPageToken)
+    }
+
+    const playlistItemsResponse = await fetch(playlistItemsUrl.toString())
+    if (!playlistItemsResponse.ok) {
+      const errorData = await playlistItemsResponse.json().catch(() => ({}))
+      throw new Error(errorData.error?.message || playlistItemsResponse.statusText)
+    }
+
+    const playlistItemsData = await playlistItemsResponse.json()
+    videos.push(
+      ...playlistItemsData.items
+        .filter((item: any) => item.contentDetails?.videoId && item.snippet?.title !== "Deleted video")
+        .map((item: any) => ({
+          youtube_id: item.contentDetails.videoId,
+          title: item.snippet.title,
+          channel_title: item.snippet.videoOwnerChannelTitle || item.snippet.channelTitle || "",
+          thumbnail: getThumbnail(item.snippet.thumbnails),
+          position: item.snippet.position ?? videos.length,
+        })),
+    )
+
+    nextPageToken = playlistItemsData.nextPageToken || ""
+  } while (nextPageToken)
+
+  return NextResponse.json({
+    resultType: "playlist",
+    playlist: {
+      youtube_playlist_id: playlistId,
+      title: playlist.snippet.title,
+      channel_title: playlist.snippet.channelTitle || "",
+      thumbnail: getThumbnail(playlist.snippet.thumbnails),
+      video_count: playlist.contentDetails?.itemCount ?? videos.length,
+      videos,
+    },
+    nextPageToken: "",
+  })
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const query = searchParams.get("q")
@@ -76,9 +166,36 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Search query is required" }, { status: 400 })
   }
 
-  // If no API key is provided or we're in development mode, return mock data
-  if (!API_KEY || process.env.NODE_ENV === "development") {
-    console.warn("Using mock data for YouTube search. No API key provided or in development mode.")
+  const playlistId = extractPlaylistId(query)
+
+  if (playlistId) {
+    if (!API_KEY) {
+      return NextResponse.json(
+        {
+          resultType: "playlist_error",
+          error: "A YouTube API key is required to load playlist videos. Add YOUTUBE_API_KEY to .env.local.",
+        },
+        { status: 503 },
+      )
+    }
+
+    try {
+      return await fetchPlaylist(playlistId)
+    } catch (error) {
+      console.error("Error fetching YouTube playlist:", error)
+      return NextResponse.json(
+        {
+          resultType: "playlist_error",
+          error: error instanceof Error ? error.message : "Failed to load playlist",
+        },
+        { status: 502 },
+      )
+    }
+  }
+
+  // Keep the previous behavior for normal search when no API key is configured.
+  if (!API_KEY) {
+    console.warn("Using mock data for YouTube search. No API key provided.")
 
     // Filter mock results based on query for a more realistic experience
     const filteredResults = MOCK_SEARCH_RESULTS.filter(
@@ -88,6 +205,7 @@ export async function GET(request: Request) {
     )
 
     return NextResponse.json({
+      resultType: "videos",
       items: filteredResults.length > 0 ? filteredResults : MOCK_SEARCH_RESULTS.slice(0, 3),
       nextPageToken: "",
     })
@@ -118,6 +236,7 @@ export async function GET(request: Request) {
       if (response.status === 403) {
         console.warn("YouTube API returned 403 Forbidden. Using mock data instead.")
         return NextResponse.json({
+          resultType: "videos",
           items: MOCK_SEARCH_RESULTS,
           nextPageToken: "",
         })
@@ -130,6 +249,7 @@ export async function GET(request: Request) {
 
     // Format the response to include only what we need
     const formattedResults = {
+      resultType: "videos",
       items: data.items.map((item: any) => ({
         id: item.id,
         snippet: {
@@ -149,6 +269,7 @@ export async function GET(request: Request) {
 
     // Return mock data as fallback with a 200 status to keep the app functional
     return NextResponse.json({
+      resultType: "videos",
       items: MOCK_SEARCH_RESULTS,
       nextPageToken: "",
     })

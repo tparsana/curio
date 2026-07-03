@@ -15,6 +15,8 @@ export function VideoFeed() {
   const { selectedVideo } = useVideo()
   const [isMounted, setIsMounted] = useState(false)
   const [activeTab, setActiveTab] = useState("library")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [searchQueryKey, setSearchQueryKey] = useState(0)
 
   // Handle hydration mismatch by only rendering after mount
   useEffect(() => {
@@ -24,7 +26,13 @@ export function VideoFeed() {
   return (
     <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 sm:py-6">
       <div className="mb-4 sm:mb-6">
-        <VideoInput />
+        <VideoInput
+          onPlaylistSearch={(query) => {
+            setSearchQuery(query)
+            setSearchQueryKey((key) => key + 1)
+            setActiveTab("search")
+          }}
+        />
       </div>
 
       {selectedVideo ? (
@@ -49,7 +57,7 @@ export function VideoFeed() {
             )}
           </TabsContent>
           <TabsContent value="search">
-            <YouTubeSearch />
+            <YouTubeSearch externalQuery={searchQuery} externalQueryKey={searchQueryKey} />
           </TabsContent>
         </Tabs>
       )}

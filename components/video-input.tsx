@@ -9,7 +9,20 @@ import { Input } from "@/components/ui/input"
 import { useVideo } from "./video-provider"
 import { useToast } from "@/hooks/use-toast"
 
-export function VideoInput() {
+interface VideoInputProps {
+  onPlaylistSearch?: (query: string) => void
+}
+
+const isPlaylistUrl = (value: string) => {
+  try {
+    const url = new URL(value)
+    return Boolean(url.searchParams.get("list"))
+  } catch {
+    return /[?&]list=/.test(value)
+  }
+}
+
+export function VideoInput({ onPlaylistSearch }: VideoInputProps) {
   const [url, setUrl] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const { addVideo } = useVideo()
@@ -23,6 +36,16 @@ export function VideoInput() {
     setIsLoading(true)
 
     try {
+      if (isPlaylistUrl(url)) {
+        onPlaylistSearch?.(url.trim())
+        setUrl("")
+        toast({
+          title: "Playlist ready",
+          description: "Review the playlist before saving it.",
+        })
+        return
+      }
+
       await addVideo(url)
       setUrl("")
       toast({
@@ -46,7 +69,7 @@ export function VideoInput() {
         <div className="relative flex-1">
           <Input
             type="text"
-            placeholder="Paste YouTube URL here"
+            placeholder="Paste a YouTube video or playlist URL"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             className="bg-[#121214] border-[#2A2A2D] h-10 pl-10"

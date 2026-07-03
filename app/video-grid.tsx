@@ -3,6 +3,7 @@
 import { useVideo } from "@/components/video-provider"
 import { useSearchParams } from "next/navigation"
 import { VideoCard } from "@/components/video-card"
+import { PlaylistGrid } from "@/components/playlist-grid"
 import type { VideoStatus, PriorityLevel } from "@/components/video-provider"
 import { useMemo } from "react"
 
@@ -28,6 +29,7 @@ export default function VideoGrid() {
   const status = search.get("filter") as VideoStatus | null
   const tagId = search.get("tag")
   const priority = search.get("priority") as PriorityLevel
+  const view = search.get("view")
 
   const { list, sectionTitle } = useMemo(() => {
     let currentList = videos
@@ -76,6 +78,10 @@ export default function VideoGrid() {
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#2A2A2D]"></div>
       </div>
     )
+  }
+
+  if (view === "playlists") {
+    return <PlaylistGrid />
   }
 
   if (!list.length) {

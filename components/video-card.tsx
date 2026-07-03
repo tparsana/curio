@@ -75,9 +75,9 @@ export function VideoCard({ video }: VideoCardProps) {
   const getPriorityColor = (priority: PriorityLevel) => {
     switch (priority) {
       case "high":
-        return "bg-amber-500"
+        return "bg-red-500"
       case "medium":
-        return "bg-zinc-500"
+        return "bg-orange-500"
       case "low":
         return "bg-emerald-500"
       default:
@@ -160,18 +160,18 @@ export function VideoCard({ video }: VideoCardProps) {
 
                 {/* Priority submenu */}
                 <DropdownMenuSub>
-                  <DropdownMenuSubTrigger onClick={(e) => e.stopPropagation()}>
-                    <Flag className="h-4 w-4 mr-2" />
-                    Set Priority
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent onClick={(e) => e.stopPropagation()}>
-                    <DropdownMenuItem onClick={(e) => handlePriorityUpdate("high", e)}>
-                      <span className="w-2 h-2 rounded-full bg-amber-500 mr-2"></span>
+                    <DropdownMenuSubTrigger onClick={(e) => e.stopPropagation()}>
+                      <Flag className="h-4 w-4 mr-2" />
+                      Set Priority
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent onClick={(e) => e.stopPropagation()}>
+                      <DropdownMenuItem onClick={(e) => handlePriorityUpdate("high", e)}>
+                      <span className="w-2 h-2 rounded-full bg-red-500 mr-2"></span>
                       High
                       {video.priority === "high" && <Check className="h-4 w-4 ml-2" />}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={(e) => handlePriorityUpdate("medium", e)}>
-                      <span className="w-2 h-2 rounded-full bg-zinc-500 mr-2"></span>
+                      <span className="w-2 h-2 rounded-full bg-orange-500 mr-2"></span>
                       Medium
                       {video.priority === "medium" && <Check className="h-4 w-4 ml-2" />}
                     </DropdownMenuItem>

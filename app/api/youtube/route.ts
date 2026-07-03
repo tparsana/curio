@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 
-// YouTube API key is only used on the server
-const API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY || ""
+// YouTube API key is only used on the server. Keep the public name as a fallback for existing setups.
+const API_KEY = process.env.YOUTUBE_API_KEY || process.env.NEXT_PUBLIC_YOUTUBE_API_KEY || ""
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)

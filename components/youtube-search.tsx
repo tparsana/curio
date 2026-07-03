@@ -2,13 +2,13 @@
 
 import type React from "react"
 
-import { useState, useEffect, useRef } from "react"
-import { Search, Plus, Play, Loader2, AlertCircle } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
+import { AlertCircle, Check, ListVideo, Loader2, Play, Plus, Search } from "lucide-react"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useVideo } from "./video-provider"
 import { useToast } from "@/hooks/use-toast"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { useVideo } from "./video-provider"
 
 interface SearchResult {
   id: {
@@ -25,20 +25,48 @@ interface SearchResult {
   }
 }
 
-export function YouTubeSearch() {
+interface PlaylistResult {
+  youtube_playlist_id: string
+  title: string
+  channel_title: string
+  thumbnail: string
+  video_count: number
+  videos: Array<{
+    youtube_id: string
+    title: string
+    channel_title: string
+    thumbnail: string
+    position: number
+  }>
+}
+
+interface YouTubeSearchProps {
+  externalQuery?: string
+  externalQueryKey?: number
+}
+
+export function YouTubeSearch({ externalQuery, externalQueryKey }: YouTubeSearchProps) {
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<SearchResult[]>([])
+  const [playlistResult, setPlaylistResult] = useState<PlaylistResult | null>(null)
   const [isSearching, setIsSearching] = useState(false)
   const [nextPageToken, setNextPageToken] = useState("")
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [usingMockData, setUsingMockData] = useState(false)
-  const { addVideo, setSelectedVideo } = useVideo()
+  const [savedPlaylistId, setSavedPlaylistId] = useState<string | null>(null)
+  const { addVideo, addPlaylist, playlists, setSelectedVideo, playPlaylist } = useVideo()
   const { toast } = useToast()
   const observerRef = useRef<IntersectionObserver | null>(null)
   const loadMoreRef = useRef<HTMLDivElement>(null)
 
-  // Set up intersection observer for infinite scroll
+  useEffect(() => {
+    if (!externalQuery) return
+
+    setQuery(externalQuery)
+    searchVideos(externalQuery)
+  }, [externalQuery, externalQueryKey])
+
   useEffect(() => {
     if (!nextPageToken) return
 
@@ -67,21 +95,28 @@ export function YouTubeSearch() {
 
     setIsSearching(true)
     setResults([])
+    setPlaylistResult(null)
+    setSavedPlaylistId(null)
     setNextPageToken("")
     setError(null)
     setUsingMockData(false)
 
     try {
       const response = await fetch(`/api/youtube/search?q=${encodeURIComponent(searchQuery)}`)
+      const data = await response.json().catch(() => ({}))
 
-      if (!response.ok && response.status !== 200) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || "Failed to search videos")
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to search YouTube")
       }
 
-      const data = await response.json()
+      if (data.resultType === "playlist" && data.playlist) {
+        setPlaylistResult(data.playlist)
+        setSavedPlaylistId(
+          playlists.find((playlist) => playlist.youtube_playlist_id === data.playlist.youtube_playlist_id)?.id || null,
+        )
+        return
+      }
 
-      // Check if we're using mock data (no nextPageToken is a hint)
       if (!data.nextPageToken && data.items && data.items.length > 0) {
         setUsingMockData(true)
       }
@@ -89,8 +124,8 @@ export function YouTubeSearch() {
       setResults(data.items || [])
       setNextPageToken(data.nextPageToken || "")
     } catch (error) {
-      console.error("Error searching videos:", error)
-      setError(error instanceof Error ? error.message : "Failed to search YouTube videos")
+      console.error("Error searching YouTube:", error)
+      setError(error instanceof Error ? error.message : "Failed to search YouTube")
     } finally {
       setIsSearching(false)
     }
@@ -103,13 +138,12 @@ export function YouTubeSearch() {
 
     try {
       const response = await fetch(`/api/youtube/search?q=${encodeURIComponent(query)}&pageToken=${nextPageToken}`)
+      const data = await response.json().catch(() => ({}))
 
-      if (!response.ok && response.status !== 200) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || "Failed to load more videos")
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to load more videos")
       }
 
-      const data = await response.json()
       setResults((prev) => [...prev, ...(data.items || [])])
       setNextPageToken(data.nextPageToken || "")
     } catch (error) {
@@ -147,19 +181,76 @@ export function YouTubeSearch() {
     }
   }
 
-  const handleWatchVideo = (result: SearchResult) => {
-    // Create a temporary video object to watch without saving
-    const tempVideo = {
-      id: "temp-" + result.id.videoId,
-      youtube_id: result.id.videoId,
-      title: result.snippet.title,
-      thumbnail: result.snippet.thumbnails.medium.url,
-      status: "up_next" as const,
+  const handleSavePlaylist = async () => {
+    if (!playlistResult) return
+
+    try {
+      await addPlaylist(playlistResult)
+      setSavedPlaylistId(playlistResult.youtube_playlist_id)
+      toast({
+        title: "Playlist saved",
+        description: "Playlist has been added to your Playlists tab",
+      })
+    } catch (error) {
+      console.error("Error saving playlist:", error)
+      toast({
+        title: "Failed to save playlist",
+        description: error instanceof Error ? error.message : "Could not save the playlist",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const watchVideo = (video: {
+    youtube_id: string
+    title: string
+    thumbnail: string
+    channel_title?: string
+  }) => {
+    setSelectedVideo({
+      id: "temp-" + video.youtube_id,
+      youtube_id: video.youtube_id,
+      title: video.title,
+      thumbnail: video.thumbnail,
+      status: "up_next",
       priority: null,
       tags: [],
       created_at: new Date().toISOString(),
-    }
-    setSelectedVideo(tempVideo)
+    })
+  }
+
+  const playPreviewPlaylist = () => {
+    if (!playlistResult || !playlistResult.videos.length) return
+
+    playPlaylist({
+      id: `preview-${playlistResult.youtube_playlist_id}`,
+      youtube_playlist_id: playlistResult.youtube_playlist_id,
+      title: playlistResult.title,
+      thumbnail: playlistResult.thumbnail,
+      channel_title: playlistResult.channel_title,
+      video_count: playlistResult.video_count,
+      created_at: new Date().toISOString(),
+      storage: "local",
+      videos: playlistResult.videos.map((video) => ({
+        id: `preview-${playlistResult.youtube_playlist_id}-${video.youtube_id}-${video.position}`,
+        playlist_id: `preview-${playlistResult.youtube_playlist_id}`,
+        youtube_id: video.youtube_id,
+        title: video.title,
+        thumbnail: video.thumbnail,
+        channel_title: video.channel_title,
+        position: video.position,
+        created_at: new Date().toISOString(),
+      })),
+    })
+  }
+
+  const handleWatchVideo = (result: SearchResult) => {
+    watchVideo({
+      youtube_id: result.id.videoId,
+      title: result.snippet.title,
+      thumbnail: result.snippet.thumbnails.medium.url,
+      channel_title: result.snippet.channelTitle,
+    })
   }
 
   return (
@@ -168,7 +259,7 @@ export function YouTubeSearch() {
         <div className="relative flex-1">
           <Input
             type="text"
-            placeholder="Search YouTube videos..."
+            placeholder="Search YouTube or paste a playlist URL..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="bg-[#121214] border-[#2A2A2D] h-10 pl-10"
@@ -188,14 +279,14 @@ export function YouTubeSearch() {
         <Alert className="mb-4 bg-yellow-900/20 border-yellow-800">
           <AlertCircle className="h-4 w-4 text-yellow-600" />
           <AlertTitle>Using demo data</AlertTitle>
-          <AlertDescription>YouTube API is currently unavailable. Showing demo results instead.</AlertDescription>
+          <AlertDescription>YouTube API is currently unavailable. Showing demo video results instead.</AlertDescription>
         </Alert>
       )}
 
       {error && (
         <Alert className="mb-4 bg-red-900/20 border-red-800 text-[#EDE9E4]">
           <AlertCircle className="h-4 w-4 text-red-500" />
-          <AlertTitle>Error</AlertTitle>
+          <AlertTitle>Playlist unavailable</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
@@ -203,6 +294,89 @@ export function YouTubeSearch() {
       {isSearching ? (
         <div className="flex justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-[#EDE9E4]/70" />
+        </div>
+      ) : playlistResult ? (
+        <div className="space-y-5">
+          <div className="overflow-hidden rounded-xl border border-[#2A2A2D] bg-[#121214]">
+            <div className="grid gap-4 p-4 md:grid-cols-[260px_1fr]">
+              <button
+                type="button"
+                className="group relative aspect-video overflow-hidden rounded-lg bg-black text-left"
+                onClick={playPreviewPlaylist}
+              >
+                <img
+                  src={playlistResult.thumbnail || "/placeholder.svg"}
+                  alt={playlistResult.title}
+                  className="h-full w-full object-cover opacity-90 transition-opacity group-hover:opacity-70"
+                />
+                <div className="absolute inset-y-0 right-0 flex w-20 items-center justify-center bg-black/65 text-sm">
+                  <div className="text-center">
+                    <ListVideo className="mx-auto mb-1 h-5 w-5" />
+                    {playlistResult.video_count}
+                  </div>
+                </div>
+              </button>
+
+              <div className="flex flex-col justify-between gap-4">
+                <div>
+                  <div className="mb-2 text-xs uppercase tracking-[0.24em] text-[#EDE9E4]/50">Playlist</div>
+                  <h2 className="text-2xl font-semibold leading-tight">{playlistResult.title}</h2>
+                  <p className="mt-2 text-sm text-[#EDE9E4]/55">{playlistResult.channel_title}</p>
+                  <p className="mt-3 text-sm text-[#EDE9E4]/65">
+                    {playlistResult.videos.length} videos ready to browse.
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    onClick={handleSavePlaylist}
+                    disabled={Boolean(savedPlaylistId)}
+                    className="bg-[#EDE9E4] text-[#0B0B0C] hover:bg-[#D8D3CB]"
+                  >
+                    {savedPlaylistId ? (
+                      <>
+                        <Check className="mr-2 h-4 w-4" />
+                        Saved
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="mr-2 h-4 w-4" />
+                        Save playlist
+                      </>
+                    )}
+                  </Button>
+                  {playlistResult.videos[0] && (
+                    <Button
+                      variant="outline"
+                      className="border-[#2A2A2D] bg-transparent text-[#EDE9E4] hover:bg-[#1A1A1D]"
+                      onClick={playPreviewPlaylist}
+                    >
+                      <Play className="mr-2 h-4 w-4" />
+                      Play all
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="overflow-hidden rounded-xl border border-[#2A2A2D] bg-[#0F0F11]">
+            {playlistResult.videos.map((video, index) => (
+              <button
+                key={`${video.youtube_id}-${video.position}`}
+                type="button"
+                onClick={() => watchVideo(video)}
+                className="grid w-full grid-cols-[44px_96px_1fr] items-center gap-3 border-b border-[#2A2A2D] p-3 text-left transition-colors last:border-b-0 hover:bg-[#151518]"
+              >
+                <span className="text-sm text-[#EDE9E4]/45">{index + 1}</span>
+                <img src={video.thumbnail || "/placeholder.svg"} alt="" className="aspect-video w-24 rounded object-cover" />
+                <span>
+                  <span className="line-clamp-2 text-sm font-medium">{video.title}</span>
+                  <span className="mt-1 block text-xs text-[#EDE9E4]/45">{video.channel_title}</span>
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
       ) : results.length > 0 ? (
         <div>
@@ -245,7 +419,6 @@ export function YouTubeSearch() {
             ))}
           </div>
 
-          {/* Infinite scroll loading indicator */}
           {nextPageToken && !usingMockData && (
             <div ref={loadMoreRef} className="flex justify-center py-6">
               {isLoadingMore ? (
@@ -263,9 +436,9 @@ export function YouTubeSearch() {
             </div>
           )}
         </div>
-      ) : query.trim() && !isSearching ? (
+      ) : query.trim() && !isSearching && !error ? (
         <div className="text-center py-12 text-[#EDE9E4]/65">
-          <p>No videos found. Try a different search term.</p>
+          <p>No videos or playlists found. Try a different search term.</p>
         </div>
       ) : null}
     </div>

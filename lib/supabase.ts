@@ -35,6 +35,7 @@ export type Database = {
           priority?: "high" | "medium" | "low" | null
           created_at?: string
         }
+        Relationships: []
       }
       tags: {
         Row: {
@@ -55,6 +56,7 @@ export type Database = {
           name?: string
           created_at?: string
         }
+        Relationships: []
       }
       video_tags: {
         Row: {
@@ -75,12 +77,85 @@ export type Database = {
           tag_id?: string
           created_at?: string
         }
+        Relationships: []
+      }
+      playlists: {
+        Row: {
+          id: string
+          user_id: string
+          youtube_playlist_id: string
+          title: string
+          thumbnail: string
+          channel_title: string
+          video_count: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          youtube_playlist_id: string
+          title: string
+          thumbnail: string
+          channel_title?: string
+          video_count?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          youtube_playlist_id?: string
+          title?: string
+          thumbnail?: string
+          channel_title?: string
+          video_count?: number
+          created_at?: string
+        }
+        Relationships: []
+      }
+      playlist_videos: {
+        Row: {
+          id: string
+          user_id: string
+          playlist_id: string
+          youtube_id: string
+          title: string
+          thumbnail: string
+          channel_title: string
+          position: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          playlist_id: string
+          youtube_id: string
+          title: string
+          thumbnail: string
+          channel_title?: string
+          position: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          playlist_id?: string
+          youtube_id?: string
+          title?: string
+          thumbnail?: string
+          channel_title?: string
+          position?: number
+          created_at?: string
+        }
+        Relationships: []
       }
     }
+    Views: {}
+    Functions: {}
     Enums: {
       video_status: "up_next" | "watched" | "not_interested"
       priority_level: "high" | "medium" | "low"
     }
+    CompositeTypes: {}
   }
 }
 

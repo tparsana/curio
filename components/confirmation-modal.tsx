@@ -26,7 +26,11 @@ export function ConfirmationModal({ isOpen, onClose, onConfirm, title, descripti
           <DialogDescription className="text-[#EDE9E4]/65">{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex gap-2 sm:justify-end">
-          <Button variant="outline" onClick={onClose} className="bg-transparent">
+          <Button
+            variant="outline"
+            onClick={onClose}
+            className="border-[#EDE9E4]/80 bg-transparent text-[#EDE9E4] hover:bg-[#1A1A1D] hover:text-[#EDE9E4]"
+          >
             Cancel
           </Button>
           <Button

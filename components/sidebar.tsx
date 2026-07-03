@@ -12,6 +12,7 @@ import {
   Flag,
   History,
   Home,
+  ListVideo,
   LogOut,
   Menu,
   MoreVertical,
@@ -91,7 +92,14 @@ export function Sidebar() {
 
   const isRouteActive = (route: string, param?: { key: string; value: string }) => {
     if (route !== pathname) return false
-    if (!param) return !searchParams.has("filter") && !searchParams.has("priority") && !searchParams.has("tag")
+    if (!param) {
+      return (
+        !searchParams.has("filter") &&
+        !searchParams.has("priority") &&
+        !searchParams.has("tag") &&
+        !searchParams.has("view")
+      )
+    }
     return searchParams.get(param.key) === param.value
   }
 
@@ -161,6 +169,16 @@ export function Sidebar() {
             <X className="h-5 w-5 flex-shrink-0" />
             {!isCollapsed && <span>Not Interested</span>}
           </Link>
+          <Link
+            href={`${appRoute}?view=playlists`}
+            className={cn(
+              "flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#121214]",
+              isRouteActive(appRoute, { key: "view", value: "playlists" }) && "bg-[#121214]",
+            )}
+          >
+            <ListVideo className="h-5 w-5 flex-shrink-0" />
+            {!isCollapsed && <span>Playlists</span>}
+          </Link>
         </div>
 
         {!isCollapsed ? (
@@ -180,7 +198,7 @@ export function Sidebar() {
                   isRouteActive(appRoute, { key: "priority", value: "high" }) && "bg-[#121214]",
                 )}
               >
-                <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                <span className="w-2 h-2 rounded-full bg-red-500"></span>
                 <span>High</span>
               </Link>
               <Link
@@ -190,7 +208,7 @@ export function Sidebar() {
                   isRouteActive(appRoute, { key: "priority", value: "medium" }) && "bg-[#121214]",
                 )}
               >
-                <span className="w-2 h-2 rounded-full bg-zinc-500"></span>
+                <span className="w-2 h-2 rounded-full bg-orange-500"></span>
                 <span>Medium</span>
               </Link>
               <Link
@@ -334,22 +352,22 @@ export function Sidebar() {
 
       <div className={cn("p-4 border-t border-[#2A2A2D]", isCollapsed && "text-center")}>
         {!isCollapsed ? (
-          <div className="flex flex-col">
-            <div className="font-medium">Hi, {displayName}</div>
-            <div className="text-xs text-[#EDE9E4]/60 mt-1">{user?.email}</div>
-            <div className="mt-4 text-xs text-[#EDE9E4]/60 flex items-center justify-between gap-3">
-              <div className="whitespace-nowrap">
+          <div className="flex min-w-0 flex-col">
+            <div className="truncate font-medium">Hi, {displayName}</div>
+            <div className="mt-1 truncate text-xs text-[#EDE9E4]/60">{user?.email}</div>
+            <div className="mt-4 flex min-w-0 items-center gap-1 text-[clamp(10.5px,0.78vw,12px)] leading-none text-[#EDE9E4]/60">
+              <div className="min-w-0 flex-1 whitespace-nowrap tracking-[-0.035em]">
                 Created Curiously by{" "}
                 <a
                   href="https://solo.to/tparsana"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#EDE9E4]/90 hover:text-[#EDE9E4] hover:underline ml-1"
+                  className="ml-px whitespace-nowrap text-[#EDE9E4]/85 hover:text-[#EDE9E4] hover:underline"
                 >
                   Tanish Parsana
                 </a>
               </div>
-              <Button variant="ghost" size="sm" onClick={handleLogout} className="ml-2">
+              <Button variant="ghost" size="icon" onClick={handleLogout} className="h-7 w-7 flex-shrink-0">
                 <LogOut className="h-4 w-4" />
               </Button>
             </div>
