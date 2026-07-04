@@ -8,45 +8,45 @@ import { AsciiScrollPanel } from "@/components/landing/ascii-scroll-panel"
 const whatIsCurio = [
   {
     title: "Save what matters",
-    description: "Not everything deserves your attention.",
+    description: "Not everything deserves your attention. Curio keeps the videos that do.",
   },
   {
-    title: "Keep it readable",
-    description: "A clean queue you can actually return to.",
+    title: "Make your own queues",
+    description: "Build playlists for work, learning, fitness, music, or to just lock in.",
   },
   {
-    title: "Come back on purpose",
-    description: "No pressure. No drift. Just intention.",
+    title: "Watch without drifting",
+    description: "Open Curio, press play, and stay with the videos you chose.",
   },
 ]
 
 const reasons = [
   {
-    title: "Most video tools are built for motion",
-    description: "Curio is built for pause.",
+    title: "YouTube is built for drift",
+    description: "You open it for one video. The feed turns it into ten.",
   },
   {
-    title: "Saved videos shouldn't disappear",
-    description: "They should stay useful.",
+    title: "Saved videos need structure",
+    description: "Playlists, tags, and queues keep your library usable instead of buried.",
   },
   {
-    title: "The interface stays quiet",
-    description: "So the content stands out.",
+    title: "Watching should feel intentional",
+    description: "Curio gives you the clean parts: save, organize, play, repeat.",
   },
 ]
 
 const stats = [
   {
     value: "0",
-    label: "autoplay traps",
+    label: "ADs or Distractions",
   },
   {
     value: "1",
-    label: "place for your queue",
+    label: "focused YouTube library",
   },
   {
     value: "3",
-    label: "simple actions: save, sort, return",
+    label: "simple actions: save, sort, stay Curious",
   },
 ]
 
@@ -103,7 +103,7 @@ export default function LandingPage() {
 
               <div className="space-y-6">
                 <p className="max-w-[31rem] text-lg leading-8 text-white/70 sm:text-[1.7rem] sm:leading-[1.55]">
-                  A calm place to save what you actually want to come back to.
+                  No Premium. No ADs. No Fuss. No Feed. Only YouTube and Curiosity.
                 </p>
 
                 <div className="flex flex-wrap gap-3">
@@ -121,7 +121,7 @@ export default function LandingPage() {
                   </a>
                 </div>
 
-                <p className="text-sm leading-7 text-white/48">No endless feed. No noise. Just a clear queue.</p>
+                <p className="text-sm leading-7 text-white/48">Stream and save YT videos, build playlists, arrange your library, distraction free.</p>
               </div>
             </div>
           </section>
@@ -131,10 +131,10 @@ export default function LandingPage() {
               <div className="space-y-3">
                 <p className="text-[0.68rem] uppercase tracking-[0.32em] text-white/44">What is Curio</p>
                 <h2 className="text-3xl font-medium tracking-[-0.05em] text-white sm:text-4xl">
-                  A quiet home for videos worth keeping.
+                  YouTube, organized around you.
                 </h2>
                 <p className="text-base leading-8 text-white/60 sm:text-lg">
-                  Save it once. Find it when it matters.
+                  Curio lets you save videos, arrange them into playlists, tag your library, and watch without the feed taking over.
                 </p>
               </div>
 
@@ -162,7 +162,7 @@ export default function LandingPage() {
                 <p className="text-base leading-8 text-white/60 sm:text-lg">
                   Most tools keep you watching.
                   <br />
-                  Curio helps you stop, save, and return when you&apos;re ready.
+                  Curio helps you stop, save, organize and return when you&apos;re ready.
                 </p>
               </div>
 
@@ -188,7 +188,7 @@ export default function LandingPage() {
               </div>
 
               <div className="flex items-center justify-between gap-4 pt-2">
-                <p className="text-sm leading-7 text-white/48">Come back when it matters.</p>
+                <p className="text-sm leading-7 text-white/48">Stay Curious.</p>
                 <div className="flex items-center gap-4 text-sm text-white/56">
                   <Link className="transition-colors hover:text-white" href="/signup">
                     Sign up
@@ -215,7 +215,7 @@ export default function LandingPage() {
             <p className="text-right">
               Created Curiously by{" "}
               <a
-                href="https://solo.to/tparsana"
+                href="https://www.tanishparsana.com"
                 target="_blank"
                 rel="noreferrer"
                 className="text-white/66 transition-colors hover:text-white"
