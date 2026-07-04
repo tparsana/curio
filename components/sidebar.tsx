@@ -359,7 +359,7 @@ export function Sidebar() {
               <div className="min-w-0 flex-1 whitespace-nowrap tracking-[-0.035em]">
                 Created Curiously by{" "}
                 <a
-                  href="https://solo.to/tparsana"
+                  href="https://tanishparsana.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="ml-px whitespace-nowrap text-[#EDE9E4]/85 hover:text-[#EDE9E4] hover:underline"

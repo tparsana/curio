@@ -168,7 +168,13 @@ let supabaseInstance: ReturnType<typeof createClient<Database>> | null = null
 
 export const getSupabaseClient = () => {
   if (!supabaseInstance) {
-    supabaseInstance = createClient<Database>(supabaseUrl, supabaseAnonKey)
+    supabaseInstance = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        persistSession: true,
+      },
+    })
   }
   return supabaseInstance
 }

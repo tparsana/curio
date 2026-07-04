@@ -8,6 +8,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { AuthRedirect } from "@/components/auth-redirect"
 import { useAuth } from "@/components/auth-provider"
 import { useToast } from "@/hooks/use-toast"
 import { CurioLogo } from "@/components/branding/CurioLogo"
@@ -56,6 +57,8 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0B0B0C] p-4">
+      <AuthRedirect />
+
       <Card className="w-full max-w-md bg-[#121214] border-[#2A2A2D] text-[#EDE9E4]">
         <CardHeader className="space-y-1">
           <div className="flex justify-center mb-4">

@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 
+import { AuthRedirect } from "@/components/auth-redirect"
 import { CurioLogo } from "@/components/branding/CurioLogo"
-import { ASCII_ART } from "@/components/landing/ascii-art"
-import { AsciiScrollPanel } from "@/components/landing/ascii-scroll-panel"
+import { DotMatrixScrollArt } from "@/components/landing/dot-matrix-scroll-art"
 
 const whatIsCurio = [
   {
@@ -58,11 +58,7 @@ export const metadata: Metadata = {
 export default function LandingPage() {
   return (
     <main className="relative isolate min-h-screen bg-[#080808] text-[#F5F5F0]">
-      <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 overflow-hidden lg:hidden">
-        <pre className="absolute left-1/2 top-24 m-0 w-max -translate-x-1/2 whitespace-pre text-center font-mono text-[9px] leading-[0.56rem] text-white/[0.14] antialiased">
-          {ASCII_ART}
-        </pre>
-      </div>
+      <AuthRedirect />
 
       <div className="fixed inset-x-0 top-4 z-50 px-4 sm:top-5">
         <nav className="mx-auto flex max-w-[1240px] items-center justify-between gap-4 rounded-full bg-[linear-gradient(140deg,rgba(255,255,255,0.14),rgba(255,255,255,0.04))] px-3 py-2 backdrop-blur-xl sm:px-4">
@@ -202,8 +198,8 @@ export default function LandingPage() {
           </section>
         </div>
 
-        <aside className="order-2 hidden bg-[#080808] px-4 pb-8 sm:px-6 sm:pb-10 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:block lg:px-8 lg:pb-12">
-          <AsciiScrollPanel />
+        <aside className="order-2 hidden px-4 pb-8 sm:px-6 sm:pb-10 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:block lg:px-8 lg:pb-12">
+          <DotMatrixScrollArt />
         </aside>
 
         <footer
