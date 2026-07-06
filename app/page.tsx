@@ -46,7 +46,7 @@ const stats = [
   },
   {
     value: "3",
-    label: "simple actions: save, sort, stay Curious",
+    label: "simple actions: save, sort, lock in.",
   },
 ]
 
